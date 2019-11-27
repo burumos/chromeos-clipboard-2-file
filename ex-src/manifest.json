@@ -1,0 +1,13 @@
+{
+  "name": "clipboard to file",
+  "version": "0.1",
+  "description": "chromeOS側のクリップボードの内容をファイルに反映する。",
+  "manifest_version": 2,
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["clipboard.js"]
+    }
+  ]
+}
