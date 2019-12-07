@@ -7,7 +7,22 @@ let style = {
 Object.entries(style).forEach(([key, value]) => {
   textarea.style[key] = value;
 });
-window.setInterval(() => {
+
+document.addEventListener('keydown', (e) => {
+  const ctrlDown = e.ctrlKey;
+  const keyCode = e.code;
+  if (ctrlDown && keyCode === 'KeyC') {
+    window.setTimeout(() => {
+      checkAndSendClipboard();
+    }, 0);
+  }
+})
+
+document.addEventListener('mouseup', () => {
+  checkAndSendClipboard();
+})
+
+const checkAndSendClipboard = () => {
   const activeElement = document.activeElement;
   const activeElementTagName = activeElement.tagName.toLowerCase();
   const selectObj = window.getSelection();
@@ -38,7 +53,7 @@ window.setInterval(() => {
     selectObj.addRange(range);
   }
 
-}, 1000);
+};
 
 
 function paste() {
@@ -49,10 +64,11 @@ function paste() {
 }
 
 function sendCopiedText(text) {
-  fetch("http://localhost:8123", {
+  window.fetch("http://localhost:8123", {
     method: 'post',
     credential: 'omit',
     "Content-Type": 'application/json; charset=utf-8',
     body: JSON.stringify({text}),
-  }).catch(e => e)
+  }).catch(e => null)
 }
+
