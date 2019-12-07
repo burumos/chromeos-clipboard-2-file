@@ -13,6 +13,8 @@ git clone https://github.com/burumos/chromeos-clipboard-2-file.git
 1. `.bashrc`に`node ~/Downloads/chrome-clipboard-2-file/server/server.js > /dev/null 2>&1 &`を追記する
 
 
+C-cとクリックしたときファイルに反映される
+
 ## emacsとの連携
 下記のコードをinit.elなどに追記して自動で読み込ませればOK
 
@@ -21,9 +23,11 @@ git clone https://github.com/burumos/chromeos-clipboard-2-file.git
   (defun yank-browser-clipboard ()
     "chrome os側のクリップボード内容からヤンク"
     (interactive)
-    (insert (with-current-buffer (find-file-noselect file-path)
-              (copy-region-as-kill (point-min) (point-max))
-              (buffer-string))))
+    (let ((buffer (find-file-noselect file-path))))
+        (insert (with-current-buffer buffer
+            (copy-region-as-kill (point-min) (point-max))
+            (buffer-string)))
+        (kill-buffer buffer))
 
   (if (file-exists-p file-path)
       (let ((timer nil)
