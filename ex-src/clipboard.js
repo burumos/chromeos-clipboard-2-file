@@ -18,8 +18,11 @@ document.addEventListener('keydown', (e) => {
   }
 })
 
-document.addEventListener('mouseup', () => {
-  checkAndSendClipboard();
+document.addEventListener('mouseup', e => {
+  const tagName = e.target.tagName.toLowerCase();
+  if (tagName !== 'select') {
+      checkAndSendClipboard();
+  }
 })
 
 const checkAndSendClipboard = () => {
