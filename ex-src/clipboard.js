@@ -14,7 +14,7 @@ document.addEventListener('keydown', (e) => {
   if (ctrlDown && keyCode === 'KeyC') {
     window.setTimeout(() => {
       checkAndSendClipboard();
-    }, 0);
+    }, 1);
   }
 })
 
