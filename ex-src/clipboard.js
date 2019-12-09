@@ -8,7 +8,7 @@ Object.entries(style).forEach(([key, value]) => {
   textarea.style[key] = value;
 });
 
-document.addEventListener('keydown', (e) => {
+document.body.addEventListener('keydown', (e) => {
   const ctrlDown = e.ctrlKey;
   const keyCode = e.code;
   if (ctrlDown && keyCode === 'KeyC') {
