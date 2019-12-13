@@ -9,5 +9,11 @@
       "matches": ["<all_urls>"],
       "js": ["clipboard.js"]
     }
-  ]
+  ],
+  "browser_action": {
+  },
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  }
 }
