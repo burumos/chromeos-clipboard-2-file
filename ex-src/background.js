@@ -61,7 +61,7 @@ function paste() {
 }
 
 function sendCopiedText(text) {
-  console.log('cliboard send', text);
+  // console.log('cliboard send', text);
   window.fetch("http://localhost:8123", {
     method: 'post',
     credential: 'omit',
