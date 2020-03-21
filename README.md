@@ -23,11 +23,11 @@ C-cとクリックしたときファイルに反映される
   (defun yank-browser-clipboard ()
     "chrome os側のクリップボード内容からヤンク"
     (interactive)
-    (let ((buffer (find-file-noselect file-path))))
-        (insert (with-current-buffer buffer
-            (copy-region-as-kill (point-min) (point-max))
-            (buffer-string)))
-        (kill-buffer buffer))
+    (let ((buffer  (find-file-noselect file-path)))
+      (insert (with-current-buffer buffer
+                (copy-region-as-kill (point-min) (point-max))
+                (buffer-string)))
+      (kill-buffer buffer)))
 
   (if (file-exists-p file-path)
       (let ((timer nil)
@@ -38,22 +38,24 @@ C-cとクリックしたときファイルに反映される
           (setq timer
                 (run-at-time
                  1 1 (lambda ()
-                       (let  ((clipboard-buffer (find-file-noselect file-path)))
-                         (with-current-buffer clipboard-buffer
-                           (let ((clipboard-string (buffer-substring-no-properties (point-min) (point-max))))
-                             (unless (or (equal clipboard-string (car kill-ring-yank-pointer))
-                                         (equal clipboard-string latest-content))
-                               (copy-region-as-kill (point-min) (point-max)))
-                             (setq latest-content clipboard-string)
-                             (kill-buffer clipboard-buffer))))))))
+                       (with-temp-buffer
+                         (insert-file-contents file-path)
+                         (let ((clipboard-string (buffer-substring-no-properties (point-min) (point-max))))
+                           (unless (or (equal clipboard-string (car kill-ring-yank-pointer))
+                                       (equal clipboard-string latest-content))
+                             (copy-region-as-kill (point-min) (point-max)))
+                           (setq latest-content clipboard-string)))
+                       ))))
 
         (defun stop-monitor-browser-clipboard ()
           "クリップボードの監視を止める"
           (interactive)
           (if (timerp timer)
               (cancel-timer timer)))
-
+        ;; 開始
         (start-monitor-browser-clipboard)
+        ;; 停止
+        ;; (stop-monitor-browser-clipboard)
         )))
 ```
 

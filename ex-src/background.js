@@ -36,3 +36,44 @@ const toggleState = async (isEnable=null) => {
 chrome.browserAction.onClicked.addListener(toggleState)
 get(KEY).then((result) => toggleState(result));
 
+
+/**
+ * 一定時間毎にクリップボードの内容を送る
+ */
+let isEnable = true;
+// 利用可否の初期値取得
+get(KEY).then(result => isEnable = result);
+// 利用可否の変更を監視
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+  if (KEY in changes) {
+    isEnable = changes[KEY].newValue;
+  }
+});
+
+
+const textarea = document.body.appendChild(document.createElement('textarea'));
+
+function paste() {
+  textarea.value = '';
+  textarea.focus();
+  document.execCommand('paste');
+  sendCopiedText(textarea.value);
+}
+
+function sendCopiedText(text) {
+  console.log('cliboard send', text);
+  window.fetch("http://localhost:8123", {
+    method: 'post',
+    credential: 'omit',
+    "Content-Type": 'application/json; charset=utf-8',
+    body: JSON.stringify({text}),
+  }).catch(e => null)
+}
+
+window.setInterval(() => {
+  const str = paste();
+  if (!str) return;
+
+  sendCopiedText(str);
+}, 500);
+
