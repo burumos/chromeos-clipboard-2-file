@@ -71,6 +71,7 @@ function sendCopiedText(text) {
 }
 
 window.setInterval(() => {
+  if (!isEnable) return;
   const str = paste();
   if (!str) return;
 
